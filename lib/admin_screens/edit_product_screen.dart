@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -42,7 +43,11 @@ class _EditProductScreenState extends State<EditProductScreen> {
     try {
       final response = await http.put(
         Uri.parse('${Config_URL.baseUrl}api/ProductApi/${widget.product.id}'),
-        headers: {'Content-Type': 'application/json'}, // Đảm bảo định dạng JSON
+        headers: {
+          HttpHeaders.contentTypeHeader: 'application/json',
+          HttpHeaders.acceptHeader: 'application/json',
+          'ngrok-skip-browser-warning': 'true'
+        },
         body: jsonEncode(updatedProduct.toJson()), // Gửi dữ liệu dưới dạng JSON
       );
 

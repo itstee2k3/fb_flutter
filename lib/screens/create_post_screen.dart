@@ -109,7 +109,6 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
       if (response.statusCode == 201) {
         // final Map<String, dynamic> newPost = json.decode(response.body);
         showSuccessDialog('Post created successfully.');
-        // Navigator.pop(context); // Quay lại sau khi tạo bài đăng
       } else {
         showErrorDialog('Failed to create post: ${response.body}');
       }

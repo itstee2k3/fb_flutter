@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import '../config/config_url.dart';
 import '../models/post_post.dart';
@@ -30,7 +32,14 @@ class _AccountScreenState extends State<AccountScreen> {
 
   // Hàm fetchPosts để tải dữ liệu
   Future<void> fetchPosts(String userId) async {
-    final response = await http.get(Uri.parse('${Config_URL.baseUrl}api/Post/user/$userId'));
+    final response = await http.get(
+        Uri.parse('${Config_URL.baseUrl}api/Post/user/$userId'),
+      headers: {
+        HttpHeaders.contentTypeHeader: 'application/json',
+        HttpHeaders.acceptHeader: 'application/json',
+        'ngrok-skip-browser-warning': 'true'
+      },
+    );
 
     if (response.statusCode == 200) {
       final postsData = json.decode(response.body);

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -29,7 +31,11 @@ class _UpdatePostScreenState extends State<UpdatePostScreen> {
   Future<void> _fetchPostData() async {
     final response = await http.get(
       Uri.parse('$apiUrl/${widget.postId}'),
-      headers: {'Content-Type': 'application/json'},
+      headers: {
+        HttpHeaders.contentTypeHeader: 'application/json',
+        HttpHeaders.acceptHeader: 'application/json',
+        'ngrok-skip-browser-warning': 'true'
+      },
     );
 
     if (response.statusCode == 200) {
@@ -73,7 +79,11 @@ class _UpdatePostScreenState extends State<UpdatePostScreen> {
     try {
       final response = await http.put(
         Uri.parse('$apiUrl/${widget.postId}'),
-        headers: {'Content-Type': 'application/json'},
+        headers: {
+          HttpHeaders.contentTypeHeader: 'application/json',
+          HttpHeaders.acceptHeader: 'application/json',
+          'ngrok-skip-browser-warning': 'true'
+        },
         body: jsonPostData,
       );
 

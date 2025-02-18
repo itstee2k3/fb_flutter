@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../config/config_url.dart';
@@ -38,7 +39,14 @@ class _CartScreenState extends State<CartScreen> {
     final String baseUrl = '${Config_URL.baseUrl}api/CartApi/user/$userId';
 
     try {
-      final response = await http.get(Uri.parse(baseUrl));
+      final response = await http.get(
+          Uri.parse(baseUrl),
+        headers: {
+          HttpHeaders.contentTypeHeader: 'application/json',
+          HttpHeaders.acceptHeader: 'application/json',
+          'ngrok-skip-browser-warning': 'true'
+        },
+      );
 
       if (response.statusCode == 200) {
         final responseData = json.decode(response.body);

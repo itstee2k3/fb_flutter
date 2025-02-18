@@ -20,10 +20,6 @@ class HomeScreen extends StatelessWidget {
       },
     );
 
-    print('Response headers: ${response.headers}');
-    print('Response status: ${response.statusCode}');
-    print('Response body: ${response.body}');  // In ra body của phản hồi để kiểm tra
-
     if (response.statusCode == 200) {
       List<dynamic> data = json.decode(response.body);
       return data.map((item) => Post.fromJson(item)).toList();

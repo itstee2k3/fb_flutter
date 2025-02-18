@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'screens/login_screen.dart';
 import 'screens/main_screen.dart';
+import 'package:provider/provider.dart';
+import '../provider/post_provider.dart'; // Import PostProvider
 
 Future<void> main() async {
   await dotenv.load(fileName: ".env");
@@ -18,9 +20,14 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const LoginScreen(),
-      // home: const MainScreen(),
-
+      // Trực tiếp cung cấp MultiProvider mà không cần kiểm tra login status
+      home: MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (context) => PostProvider()), // Cung cấp PostProvider
+          // Thêm các provider khác nếu cần
+        ],
+        child: const MainScreen(),
+      ),
     );
   }
 }

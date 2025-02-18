@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -10,6 +11,7 @@ import '../models/cart_post.dart'; // Đảm bảo import màn hình login của
 import '../models/product_post.dart';
 import 'edit_product_screen.dart'; // Import your EditProductScreen
 import 'add_product_screen.dart'; // Import your AddProductScreen
+import 'package:intl/intl.dart'; // Import intl
 
 class AdminScreen extends StatefulWidget {
   const AdminScreen({super.key});
@@ -29,7 +31,14 @@ class _AdminScreenState extends State<AdminScreen> {
 
   // Fetch all products
   Future<List<Product>> fetchProducts() async {
-    final response = await http.get(Uri.parse('${Config_URL.baseUrl}api/ProductApi'));
+    final response = await http.get(
+        Uri.parse('${Config_URL.baseUrl}api/ProductApi'),
+      headers: {
+        HttpHeaders.contentTypeHeader: 'application/json',
+        HttpHeaders.acceptHeader: 'application/json',
+        'ngrok-skip-browser-warning': 'true'
+      },
+    );
     if (response.statusCode == 200) {
       List<dynamic> data = json.decode(response.body);
       return data.map((item) => Product.fromJson(item)).toList();
@@ -67,7 +76,7 @@ class _AdminScreenState extends State<AdminScreen> {
     if (confirm == true) {
       try {
         final response = await http.delete(Uri.parse('${Config_URL.baseUrl}api/ProductApi/$id'));
-        if (response.statusCode == 200) {
+        if (response.statusCode == 204) {
           setState(() {
             products = fetchProducts(); // Làm mới danh sách sản phẩm
           });
@@ -126,6 +135,8 @@ class _AdminScreenState extends State<AdminScreen> {
               itemCount: snapshot.data!.length,
               itemBuilder: (context, index) {
                 final product = snapshot.data![index];
+                final formattedPrice = NumberFormat('#,##0', 'vi_VN').format(product.price);
+
                 return Card(
                   margin: const EdgeInsets.all(8.0),
                   child: ListTile(
@@ -144,7 +155,11 @@ class _AdminScreenState extends State<AdminScreen> {
                     )
                         : const Icon(Icons.image_not_supported, size: 50), // Icon khi không có ảnh
                     title: Text(product.name),
-                    subtitle: Text('${product.description}\nPrice: \$${product.price}'),
+                    subtitle: Text(
+                        // '${product.description}\nPrice: \$${product.price}'
+                      '${product.description}\nGiá: $formattedPrice VNĐ',
+
+                    ),
                     trailing: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [

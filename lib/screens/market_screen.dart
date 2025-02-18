@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../config/config_url.dart';
@@ -32,7 +33,14 @@ class _MarketScreenState extends State<MarketScreen> {
   Future<void> fetchProducts({String query = ''}) async {
     final String baseUrl = '${Config_URL.baseUrl}api/ProductApi/search?name=';
     try {
-      final response = await http.get(Uri.parse(baseUrl + query));
+      final response = await http.get(
+          Uri.parse(baseUrl + query),
+        headers: {
+          HttpHeaders.contentTypeHeader: 'application/json',
+          HttpHeaders.acceptHeader: 'application/json',
+          'ngrok-skip-browser-warning': 'true'
+        },
+      );
       if (response.statusCode == 200) {
         List<dynamic> data = json.decode(response.body);
         setState(() {
@@ -245,7 +253,11 @@ class ProductDetailScreen extends StatelessWidget {
       final response = await http.post(
         Uri.parse(apiUrl),
         body: json.encode(cartPost.toJson()), // Gửi dữ liệu giỏ hàng dưới dạng JSON
-        headers: {'Content-Type': 'application/json'},
+        headers: {
+          HttpHeaders.contentTypeHeader: 'application/json',
+          HttpHeaders.acceptHeader: 'application/json',
+          'ngrok-skip-browser-warning': 'true'
+        },
       );
       if (response.statusCode == 200) {
         ScaffoldMessenger.of(context).showSnackBar(
